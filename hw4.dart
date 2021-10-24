@@ -22,7 +22,7 @@ void main() {
   print('Final Solution: ${finalResult}');
   print('Final Size: ${finalResult.length}');
 
-  print('This run: ${stopwatch.elapsed.inMicroseconds} microsecs');
+  print('This run: ${stopwatch.elapsed.inMicroseconds} microseconds');
 }
 
 bool foundSetCover = false;
