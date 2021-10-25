@@ -4,7 +4,7 @@ void main() {
   Stopwatch stopwatch = new Stopwatch()..start();
 
   var fileLines =
-      new File('./test_files/testes').readAsStringSync().split('\n');
+      new File('./test_files/s-X-12-6').readAsStringSync().split('\n');
 
   /**  Takes each line from fileLines and turns it into a string */
   List<List<int>> sets = [];
@@ -27,36 +27,34 @@ List<List<int>> finalResult = [];
 
 void setCover(List<List<int>> sets, int max) {
   finalResult = [];
-  backtrack([], sets, max);
+  backtrack(List.filled(sets.length, []), -1, removeSublists(sets, max), max);
   print('Final Solution: ${finalResult}');
   print('Final Size: ${finalResult.length}');
 }
 
-void backtrack(List<List<int>> result, List<List<int>> data, int dataRangeMax) {
-  if ((result.length > finalResult.length) && (finalResult.length != 0)) return;
+void backtrack(
+    List<List<int>> result, int count, List<List<int>> data, int dataRangeMax) {
+  if (isSolution(result.sublist(0, count + 1), dataRangeMax)) {
+    //print(result.sublist(0, count + 1));
 
-  if (isSolution(result, dataRangeMax)) {
-    //print(result);
-
-    if ((result.length < finalResult.length) || (finalResult.length == 0)) {
-      finalResult = [];
-      result.forEach((element) => finalResult.add(element));
+    if ((count + 1 < finalResult.length) || (finalResult.length == 0)) {
+      finalResult = result.sublist(0, count + 1);
 
       return;
     }
   } else {
     List<List<int>> candidates =
-        constructCandidates(result, data, dataRangeMax);
+        constructCandidates(result.sublist(0, count + 1), data, dataRangeMax);
 
-    result.add([]);
+    count++;
 
-    for (List<int> possibleSet in candidates) {
-      result[result.length - 1] = possibleSet;
+    for (int i = 0; i < candidates.length; i++) {
+      result[count] = candidates[i];
 
-      backtrack(result, data, dataRangeMax);
+      backtrack(result, count, data, dataRangeMax);
+
+      if (count + 1 > finalResult.length) return;
     }
-
-    result.removeAt(result.length - 1);
   }
 }
 
@@ -67,23 +65,18 @@ List<List<int>> constructCandidates(
         covered[val - 1] = true;
       }));
 
-  List<int> willCover = List.filled(data.length, 0);
-  for (int i = 0; i < data.length; i++) {
-    int count = 0;
-    for (int j = 0; j < data[i].length; j++)
-      if (covered[data[i][j] - 1] == false) count++;
-
-    willCover[i] = count;
-  }
-
   List<List<int>> candidates = [];
-  while (!listEqual(willCover, List.filled(data.length, 0))) {
-    int maxIndex = willCover.indexOf((getMax(willCover)));
 
-    candidates.add(data[maxIndex]);
-
-    willCover[maxIndex] = 0;
+  for (var list in data) {
+    for (var item in list) {
+      if (!covered[item - 1]) {
+        candidates.add(list);
+        break;
+      }
+    }
   }
+
+  //print(candidates);
 
   return candidates;
 }
@@ -132,4 +125,27 @@ List<int> toIntArray(String str) {
     intArray.add(int.parse(strArray[i]));
 
   return intArray;
+}
+
+List<List<int>> removeSublists(List<List<int>> sets, int max) {
+
+  List covered = List.filled(max, false);
+
+  sets.sort((a, b) => b.length.compareTo(a.length));
+
+  var copy = new List.from(sets);
+
+  for (var list in copy) {
+    if (!covered.every((element) => element == false)) {
+      for (var item in list) {
+        covered[item - 1] = true;
+      }
+    } else {
+      if (list.length == 0 || covered[list[0] - 1]) {
+        sets.remove(list);
+      }
+    }
+  }
+
+  return sets;
 }
