@@ -4,7 +4,7 @@ void main() {
   Stopwatch stopwatch = new Stopwatch()..start();
 
   var fileLines =
-      new File('./test_files/s-k-30-50').readAsStringSync().split('\n');
+      new File('./test_files/s-rg-31-15').readAsStringSync().split('\n');
 
   /**  Takes each line from fileLines and turns it into a string */
   List<List<int>> sets = [];
@@ -29,13 +29,17 @@ void setCover(List<List<int>> sets, int max) {
   finalResult = [];
   backtrack([], removeSingles(sets, max), max);
   print('Final Solution: ${finalResult}');
+  print('Final Length: ${finalResult.length}');
 }
 
 void backtrack(List<List<int>> result, List<List<int>> data, int dataRangeMax) {
-  if ((result.length > finalResult.length) && (finalResult.length != 0)) return;
+  // If this branch is already greater than or equal to a current result, then it's dead to us
+  if ((result.length >= finalResult.length) && (finalResult.length != 0))
+    return;
+
+  print(result);
 
   if (isSolution(result, dataRangeMax)) {
-    //print(result);
 
     if ((result.length < finalResult.length) || (finalResult.length == 0)) {
       finalResult = [];
