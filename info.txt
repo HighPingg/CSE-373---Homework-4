@@ -1,0 +1,10 @@
+Largest file is 20-35 with 700ms
+
+Sorry about using dart. Probably should've used a more efficient language to do this
+homework in, but this was the only language I had.
+
+It's a very simple program, hence the large runtime and large file size, and it constructs
+candidates based on the amount of empty spaces a set satisfies. This is useful since we can
+later check if our current branch is less than our final result. We can cut off that branch
+early if it is, and since our solution is likely to be with larger sets, it cuts off a lot
+of branches.

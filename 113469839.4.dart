@@ -4,7 +4,7 @@ void main() {
   Stopwatch stopwatch = new Stopwatch()..start();
 
   var fileLines =
-      new File('./test_files/s-rg-31-15').readAsStringSync().split('\n');
+      new File('./test_files/s-k-20-35').readAsStringSync().split('\n');
 
   /**  Takes each line from fileLines and turns it into a string */
   List<List<int>> sets = [];
@@ -37,7 +37,7 @@ void backtrack(List<List<int>> result, List<List<int>> data, int dataRangeMax) {
   if ((result.length >= finalResult.length) && (finalResult.length != 0))
     return;
 
-  print(result);
+  //print(result);
 
   if (isSolution(result, dataRangeMax)) {
 
